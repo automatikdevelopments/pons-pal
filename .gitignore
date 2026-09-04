@@ -1,0 +1,28 @@
+# secrets - never commit a key that can move funds
+.env
+.env.*
+!.env.example
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# local state - the chain is the durable record, the database is a cache
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+data/abi/
+
+# tooling
+.DS_Store

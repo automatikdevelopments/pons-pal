@@ -1,0 +1,31 @@
+{
+  "project": "pons.family pons-pal",
+  "environment": "Robinhood Chain (mainnet, chainId 4663)",
+  "primaryArtifact": "pons_pal.core.engine",
+  "language": "python",
+  "runtime": "3.11",
+  "entrypoints": ["src/pons_pal/cli.py"],
+  "dataSources": [
+    "Robinhood Chain WS + JSON-RPC (web3.py)",
+    "Chainlink stock price feeds",
+    "Pons V2 pools / launchpad (pairs, fees, graduation)",
+    "equities market-data provider",
+    "Robinhood retail sentiment (Twitter/X, Stocktwits, news RSS)"
+  ],
+  "chain": {
+    "name": "Robinhood Chain",
+    "chainId": 4663,
+    "gasToken": "ETH",
+    "explorer": "https://robinhoodchain.blockscout.com"
+  },
+  "toolchain": {
+    "linter": "ruff",
+    "types": "mypy",
+    "tests": "pytest",
+    "metrics": "prometheus"
+  },
+  "custodial": false,
+  "executesTrades": true,
+  "defaultMode": "paper",
+  "armedByDefault": false
+}

@@ -1,0 +1,32 @@
+# SPDX-License-Identifier: MIT
+# Pons Family - local compose stack for pons.family
+#
+# The agent plus an optional Redis cache. Ports are bound to 127.0.0.1 on the
+# host so the metrics and MCP surfaces are never reachable from the network by
+# accident. Secrets come from `.env`, which is git-ignored.
+
+services:
+  pons-pal:
+    build: .
+    env_file: .env
+    environment:
+      PONS_PAL_MODE: ${PONS_PAL_MODE:-paper}
+      REDIS_URL: redis://redis:6379/0
+      PONS_PAL_METRICS_HOST: 0.0.0.0
+      PONS_PAL_MCP_HOST: 0.0.0.0
+    ports:
+      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:8765:8765"
+    volumes:
+      - pons-pal-data:/app/data
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    restart: unless-stopped
+
+volumes:
+  pons-pal-data:

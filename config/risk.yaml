@@ -1,0 +1,28 @@
+# Pons Family - risk limits and circuit breakers for pons.family
+#
+# Hot-reloaded: the gate re-reads this file when its mtime changes. A file
+# that fails validation is ignored and the last good limits stay in force,
+# because a typo must never widen a limit. Breakers halt all trading and stay
+# tripped across restarts until `pons-pal resume --confirm` is run by a person.
+
+hot_reload: true
+
+# --- the seven ordered checks -------------------------------------------------
+intraday_loss_pct: 2.0        # 1. BLOCK + breaker when today's P&L < -2% of equity
+weekly_loss_pct: 5.0          # 2. BLOCK + breaker when the week's P&L < -5%
+monthly_loss_pct: 10.0        # 3. BLOCK + breaker when the month's P&L < -10%
+chain_exposure_pct: 10.0      # 4. BLOCK when gross on-chain exposure > 10% of equity
+max_position_pct: 5.0         # 5. REDUCE an order that would take one position > 5%
+max_sector_pct: 25.0          # 6. BLOCK when one pair (token + its stock) > 25% of exposure
+min_adv_usd: 1000000          # 7. BLOCK when the pair's 24h on-chain volume < $1M
+
+# --- Pons-native additions ------------------------------------------------------
+feed_max_age_s: 900           # Chainlink stock feed must be younger than this during market hours
+feed_max_age_offhours_s: 86400  # off-hours the feed is expected to idle; still must not be older than a day
+stockback_min_rate: 0.0005    # daily accrual rate below which stock-back is not "live"
+underlying_max_drawdown_pct: 15.0  # BLOCK buys when the paired stock fell more than this over 5 sessions
+eth_gas_reserve: 0.02         # ETH balance the agent must keep after every swap
+max_slippage_bps: 100         # quoted slippage above this is refused
+max_price_impact_bps: 150     # modeled impact above this is refused
+per_order_max_usd: 500
+daily_notional_max_usd: 5000

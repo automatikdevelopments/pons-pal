@@ -1,0 +1,93 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pons-pal"
+version = "0.1.0"
+description = "Agentic trading for ponsfamily.com - an autonomous trader over Pons RWA token-stock pairs on Robinhood Chain."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Pons Family" }]
+requires-python = ">=3.11"
+keywords = ["pons", "robinhood-chain", "agentic-trading", "rwa", "event-bus"]
+classifiers = [
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "License :: OSI Approved :: MIT License",
+  "Framework :: AsyncIO",
+  "Topic :: Office/Business :: Financial :: Investment",
+]
+dependencies = [
+  "pydantic==2.13.5",
+  "structlog==26.1.0",
+  "PyYAML==6.0.3",
+  "aiohttp==3.14.3",
+  "websockets==17.1",
+  "numpy==2.4.6",
+  "pandas==3.0.5",
+  "scipy==1.17.1",
+  "web3==8.0.0",
+  "prometheus_client==0.26.0",
+  "defusedxml==0.7.1",
+]
+
+[project.optional-dependencies]
+redis = ["redis==8.1.0"]
+dev = [
+  "ruff==0.16.5",
+  "mypy==2.3.1",
+  "pytest==9.1.1",
+  "pytest-asyncio==1.4.0",
+  "pip-audit==2.10.1",
+  "bandit==1.9.4",
+  "types-PyYAML==6.0.12.20260815",
+  "pandas-stubs==3.0.5.260730",
+]
+
+[project.urls]
+Homepage = "https://ponsfamily.com"
+Repository = "https://github.com/ponsdotdev/pons-pal"
+
+[project.scripts]
+pons-pal = "pons_pal.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+pons_pal = ["py.typed"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "N", "ASYNC", "RUF"]
+ignore = ["RUF001", "RUF002", "RUF003"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
+"src/pons_pal/errors.py" = ["N818"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+plugins = ["pydantic.mypy"]
+mypy_path = "src"
+packages = ["pons_pal"]
+
+[[tool.mypy.overrides]]
+module = ["scipy.*", "defusedxml.*", "redis.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+pythonpath = ["src"]
+filterwarnings = ["error::DeprecationWarning:pons_pal.*"]
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]

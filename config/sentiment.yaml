@@ -1,0 +1,24 @@
+# Pons Family - retail sentiment sources for pons.family
+#
+# Weights are relative; the blend normalizes them. Every source is fetched
+# through the outbound guard, so a host must also be on the allowlist in
+# `config/pons.yaml` before a fetch is attempted.
+
+sources:
+  twitter:
+    enabled: false            # TODO(pons): needs an API base + key
+    weight: 1.0
+    base_url: ""
+  stocktwits:
+    enabled: false            # TODO(pons): confirm endpoint and terms
+    weight: 1.0
+    base_url: ""
+  rss:
+    enabled: false
+    weight: 0.5
+    feeds: []                 # https URLs of news feeds; hosts must be allowlisted
+
+blend:
+  min_sources: 1              # fewer than this and the sentiment score is reported as absent
+  half_life_s: 3600           # score decay used by the event strategy
+  max_items_per_source: 100   # bound the amount of untrusted text parsed per cycle

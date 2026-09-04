@@ -1,0 +1,39 @@
+# Pons Family - chain, router, and feed configuration for pons.family
+#
+# Nothing in this file is a secret and nothing in it is invented: every value
+# that must be confirmed against ponsfamily.com/docs is blank with a
+# TODO(pons). A blank router address keeps the agent unarmed for on-chain
+# execution even when a trading key is present.
+
+chain:
+  name: Robinhood Chain
+  chain_id: 4663                     # TODO(pons): confirm; 46630 is the testnet
+  rpc_http: https://rpc.mainnet.chain.robinhood.com   # TODO(pons): public/rate-limited; use a dedicated RPC in prod
+  rpc_ws: ""
+  explorer: https://robinhoodchain.blockscout.com
+  gas_token: ETH
+  settlement_token: USDG             # TODO(pons): confirm the USDG contract address
+  settlement_token_address: ""
+  max_fee_per_gas_gwei: 0.5
+  max_priority_fee_per_gas_gwei: 0.01
+  confirmations: 1
+  request_timeout_s: 10
+
+router:
+  address: ""                        # TODO(pons): Pons V2 / Uniswap V4 router
+  abi_path: config/abi/pons_router.json   # TODO(pons): drop the published ABI here; absent = unarmed
+  stockback_share_default: 0.5       # TODO(pons): confirm the fee share paid back in stock
+
+feeds:
+  chainlink_registry: ""             # TODO(pons): feed registry or per-stock feed map
+  stock_feeds: {}                    # symbol -> aggregator address, e.g. { AAPL: "0x..." }
+  feed_decimals_default: 8
+
+pairs:
+  index_url: ""                      # TODO(pons): Pons V2 pair index endpoint (https)
+  static: []                         # optional inline PonsPair records for paper mode
+
+outbound:
+  allowed_hosts:                     # exhaustive; anything else is refused by the SSRF guard
+    - rpc.mainnet.chain.robinhood.com
+    - robinhoodchain.blockscout.com

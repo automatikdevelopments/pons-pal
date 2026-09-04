@@ -1,0 +1,52 @@
+# Pons Family - engine defaults for pons.family
+#
+# Tunables only. Secrets live in `.env`, never here. Everything in this file is
+# validated by `pons_pal.config.EngineConfig` before the engine starts.
+
+engine:
+  mode: paper                 # paper | live; the environment variable PONS_PAL_MODE wins if set
+  cycle_interval_s: 60        # seconds between decision cycles in `pons-pal run`
+  bar_interval_s: 60          # canonical bar width produced by the normalizer
+  history_bars: 240           # rolling bars kept per pair for the strategies
+  paper_equity_usd: 10000     # starting equity for paper mode
+
+capital:
+  min_order_usd: 25           # below this a fill is all gas and slippage
+  per_order_max_usd: 500      # hard per-order ceiling, enforced in the risk gate
+  daily_notional_max_usd: 5000
+  eth_gas_reserve: 0.02       # ETH the agent must never spend on a swap
+
+universe:
+  allow_bonding_curve: false  # graduated Uniswap V4 pools only; curve pricing is thin and reflexive
+  min_liquidity_usd: 250000
+  min_volume_24h_usd: 1000000
+  max_pairs: 25
+  require_stock_feed: true
+
+strategies:
+  momentum:
+    enabled: true
+    weight: 1.0
+    lookback_bars: 60
+  mean_reversion:
+    enabled: true
+    weight: 0.8
+    lookback_bars: 120
+    z_entry: 2.0
+  pairs:
+    enabled: true
+    weight: 0.8
+    lookback_bars: 120
+    z_entry: 2.0
+  event:
+    enabled: true
+    weight: 0.6
+    half_life_s: 3600
+  stockback:
+    enabled: true
+    weight: 1.5
+    top_k: 5
+
+portfolio:
+  correlation_lookback_bars: 120
+  signal_floor: 0.15          # aggregate scores below this produce no order
